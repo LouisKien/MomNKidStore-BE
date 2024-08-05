@@ -47,7 +47,7 @@ public partial class MomNkidStoreContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.AccountId).HasName("PK__Account__F267251EABB5DA7C");
+            entity.HasKey(e => e.AccountId).HasName("PK__Account__F267251EE166FFD5");
 
             entity.ToTable("Account");
 
@@ -60,7 +60,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Blog>(entity =>
         {
-            entity.HasKey(e => e.BlogId).HasName("PK__Blog__FA0AA72D848AB518");
+            entity.HasKey(e => e.BlogId).HasName("PK__Blog__FA0AA72DB090A5BA");
 
             entity.ToTable("Blog");
 
@@ -77,7 +77,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<BlogProduct>(entity =>
         {
-            entity.HasKey(e => e.BlogProductId).HasName("PK__BlogProd__21FA6EDB2869B07E");
+            entity.HasKey(e => e.BlogProductId).HasName("PK__BlogProd__21FA6EDB6A544CC4");
 
             entity.ToTable("BlogProduct");
 
@@ -99,7 +99,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Cart__415B03B8A5F6C866");
+            entity.HasKey(e => e.CartId).HasName("PK__Cart__415B03B8186877D8");
 
             entity.ToTable("Cart");
 
@@ -122,7 +122,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<ChatRequest>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__ChatRequ__C87C0C9C0AF74768");
+            entity.HasKey(e => e.MessageId).HasName("PK__ChatRequ__C87C0C9C3104A3B2");
 
             entity.ToTable("ChatRequest");
 
@@ -133,11 +133,11 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__B611CB7D712FBF4D");
+            entity.HasKey(e => e.CustomerId).HasName("PK__Customer__B611CB7D4AB7EFB8");
 
             entity.ToTable("Customer");
 
-            entity.HasIndex(e => e.AccountId, "UQ__Customer__F267251F82CA2AFB").IsUnique();
+            entity.HasIndex(e => e.AccountId, "UQ__Customer__F267251F8AF20CEE").IsUnique();
 
             entity.Property(e => e.CustomerId).HasColumnName("customerId");
             entity.Property(e => e.AccountId).HasColumnName("accountId");
@@ -158,7 +158,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__2613FD24CAE246DD");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__2613FD24C98DB7BA");
 
             entity.ToTable("Feedback");
 
@@ -184,7 +184,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<ImageProduct>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__ImagePro__336E9B5568F9B832");
+            entity.HasKey(e => e.ImageId).HasName("PK__ImagePro__336E9B5560357BA6");
 
             entity.ToTable("ImageProduct");
 
@@ -200,7 +200,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__0809335D7A9E8B6F");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__0809335DC6E01739");
 
             entity.ToTable("Order");
 
@@ -226,7 +226,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__E4FEDE4A9906E3F6");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__E4FEDE4A6D59157D");
 
             entity.ToTable("OrderDetail");
 
@@ -250,11 +250,11 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A381FA67E1A");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A3815829D93");
 
             entity.ToTable("Payment");
 
-            entity.HasIndex(e => e.OrderId, "UQ__Payment__0809335C5D625EB2").IsUnique();
+            entity.HasIndex(e => e.OrderId, "UQ__Payment__0809335C70D813B8").IsUnique();
 
             entity.Property(e => e.OrderId).HasColumnName("orderId");
             entity.Property(e => e.PayDate).HasColumnType("datetime");
@@ -269,7 +269,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Product__2D10D16A77669011");
+            entity.HasKey(e => e.ProductId).HasName("PK__Product__2D10D16A33AD5FCD");
 
             entity.ToTable("Product", tb => tb.HasTrigger("trg_UpdateProductStatus"));
 
@@ -295,7 +295,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<ProductCategory>(entity =>
         {
-            entity.HasKey(e => e.ProductCategoryId).HasName("PK__ProductC__A944253BDA106F0B");
+            entity.HasKey(e => e.ProductCategoryId).HasName("PK__ProductC__A944253BC96B1633");
 
             entity.ToTable("ProductCategory");
 
@@ -308,7 +308,7 @@ public partial class MomNkidStoreContext : DbContext
 
         modelBuilder.Entity<VoucherOfShop>(entity =>
         {
-            entity.HasKey(e => e.VoucherId).HasName("PK__VoucherO__F53389E9EB4ABDB7");
+            entity.HasKey(e => e.VoucherId).HasName("PK__VoucherO__F53389E98C5478FA");
 
             entity.ToTable("VoucherOfShop");
 

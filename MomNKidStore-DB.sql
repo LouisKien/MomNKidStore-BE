@@ -46,7 +46,7 @@ CREATE TABLE [dbo].[Product](
 	[productInfor] [nvarchar](250) NOT NULL,
 	[productPrice] [decimal](13,2) NOT NULL CHECK ([productPrice] >= 0),
 	[productQuantity] [int] NOT NULL CHECK ([productQuantity] >= 0),
-	[productStatus] [bit] NOT NULL
+	[productStatus] [int] NOT NULL
 	CONSTRAINT FK_productCategoryId_Product FOREIGN KEY ([productCategoryId]) REFERENCES [dbo].[ProductCategory]([productCategoryId])
 )
 GO

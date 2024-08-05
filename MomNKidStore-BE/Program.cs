@@ -71,6 +71,16 @@ builder.Services.AddCors(options =>
 // Service containers
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IAuthorizeService, AuthorizeService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
+builder.Services.AddScoped<IVoucherOfShopService, VoucherOfShopService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
 
 // Background service containers
 builder.Services.AddScoped<IOrderBackgroundService, OrderBackgroundService>();

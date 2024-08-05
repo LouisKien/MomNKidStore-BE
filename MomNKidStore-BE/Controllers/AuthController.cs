@@ -28,6 +28,10 @@ namespace MomNKidStore_BE.Controllers
                 var isAuthenticated = await _authService.AuthenticateUser(loginInfo);
                 if (isAuthenticated != null)
                 {
+                    if(isAuthenticated.Status == false)
+                    {
+                        return BadRequest("Your account is locked by administrator");
+                    }
                     var accessToken = await _authService.GenerateAccessToken(isAuthenticated);
                     if (accessToken.IsNullOrEmpty())
                     {

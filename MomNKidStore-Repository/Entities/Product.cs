@@ -17,7 +17,7 @@ public partial class Product
 
     public int ProductQuantity { get; set; }
 
-    public bool ProductStatus { get; set; }
+    public int ProductStatus { get; set; }
 
     public virtual ICollection<BlogProduct> BlogProducts { get; set; } = new List<BlogProduct>();
 

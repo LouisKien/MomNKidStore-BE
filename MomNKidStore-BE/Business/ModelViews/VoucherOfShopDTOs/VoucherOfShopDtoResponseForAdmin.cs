@@ -5,8 +5,8 @@
         public int VoucherId { get; set; }
         public double VoucherValue { get; set; }
         public int VoucherQuantity { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public bool Status { get; set; }
     }
 }

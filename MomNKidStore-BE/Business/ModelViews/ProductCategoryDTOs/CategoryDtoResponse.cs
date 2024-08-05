@@ -1,6 +1,6 @@
-﻿namespace MomNKidStore_BE.Business.ModelViews.ProductDTOs
+﻿namespace MomNKidStore_BE.Business.ModelViews.ProductCategoryDTOs
 {
-    public class CategoryDto
+    public class CategoryDtoResponse
     {
         public int ProductCategoryId { get; set; }
         public string ProductCategoryName { get; set; } = null!;

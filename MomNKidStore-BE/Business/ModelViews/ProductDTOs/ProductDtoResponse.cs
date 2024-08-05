@@ -1,4 +1,6 @@
-﻿namespace MomNKidStore_BE.Business.ModelViews.ProductDTOs
+﻿using MomNKidStore_BE.Business.ModelViews.ProductCategoryDTOs;
+
+namespace MomNKidStore_BE.Business.ModelViews.ProductDTOs
 {
     public class ProductDtoResponse
     {
@@ -10,6 +12,6 @@
         public int ProductQuatity { get; set; }
         public bool ProductStatus { get; set; }
         public List<ImageProductDto> Images { get; set; } = new List<ImageProductDto>();
-        public CategoryDto? category { get; set; }
+        public CategoryDtoResponse? category { get; set; }
     }
 }

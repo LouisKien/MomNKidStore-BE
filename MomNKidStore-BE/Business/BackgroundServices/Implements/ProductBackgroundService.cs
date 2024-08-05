@@ -16,7 +16,7 @@ namespace MomNKidStore_BE.Business.BackgroundServices.Implements
         {
             try
             {
-                var hiddenProducts = await _unitOfWork.ProductRepository.GetAllAsync(p => p.ProductStatus == false);
+                var hiddenProducts = await _unitOfWork.ProductRepository.GetAllAsync(p => p.ProductStatus == 0);
                 if (hiddenProducts.Any())
                 {
                     foreach (var product in hiddenProducts)
