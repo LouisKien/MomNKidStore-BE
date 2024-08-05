@@ -19,6 +19,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.WebHost.UseUrls("http://0.0.0.0:5173");
 
 builder.Services.AddControllers();
 
@@ -149,7 +150,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MomNKidStore API V1");
+        c.RoutePrefix = "api";
+    });
 }
 
 app.UseHangfireDashboard();

@@ -317,7 +317,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
             var paymentUrl = string.Empty;
 
             var vpnRequest = new VNPayRequest(_configuration["VNpay:Version"], _configuration["VNpay:tmnCode"],
-                order.OrderDate, "https://localhost:7203", (decimal)order.TotalPrice, "VND", "other",
+                order.OrderDate, "http://13.215.183.119:5173", (decimal)order.TotalPrice, "VND", "other",
                 $"Thanh toan don hang {order.OrderId}", _configuration["VNpay:ReturnUrl"],
                 $"{order.OrderId}");
 
