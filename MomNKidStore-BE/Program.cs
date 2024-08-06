@@ -20,7 +20,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.WebHost.UseUrls("http://0.0.0.0:5173");
+//builder.WebHost.UseUrls("http://0.0.0.0:5173");
 
 builder.Services.AddControllers();
 

@@ -1,15 +1,3 @@
-USE [master]
-GO
-
-DROP DATABASE [MomNKidStore]
-GO
-
-CREATE DATABASE [MomNKidStore]
-GO
-
-USE [MomNKidStore]
-GO
-
 CREATE TABLE [dbo].[Account](
 	[accountId] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	[roleId] [int] NOT NULL,
