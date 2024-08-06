@@ -62,9 +62,9 @@ namespace MomNKidStore_BE.Business.Services.Implements
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
                 var accessClaims = new List<Claim>
                 {
-                    new Claim("AccountId", account.AccountId.ToString()),
-                    new Claim("CustomerId", role.ToString()),
-                    new Claim("RoleId", account.RoleId.ToString())
+                    new Claim("accountId", account.AccountId.ToString()),
+                    new Claim("customerId", role.ToString()),
+                    new Claim(ClaimTypes.Role, account.RoleId.ToString())
                 };
                 var accessExpiration = DateTime.Now.AddMinutes(30);
                 var accessJwt = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], accessClaims, expires: accessExpiration, signingCredentials: credentials);

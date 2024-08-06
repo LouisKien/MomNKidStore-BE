@@ -14,6 +14,7 @@ using MomNKidStore_Repository.Repositories.Implements;
 using MomNKidStore_Repository.Repositories.Interfaces;
 using MomNKidStore_Repository.UnitOfWorks.Implements;
 using MomNKidStore_Repository.UnitOfWorks.Interfaces;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,13 +46,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Set policy permission for roles
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("RoleId", "1"));
-    options.AddPolicy("RequireStaffRole", policy => policy.RequireClaim("RoleId", "2"));
-    options.AddPolicy("RequireCustomerRole", policy => policy.RequireClaim("RoleId", "3"));
-    options.AddPolicy("RequireAdminOrStaffRole", policy => policy.RequireClaim("RoleId", "1", "2"));
-    options.AddPolicy("RequireAdminOrCustomerRole", policy => policy.RequireClaim("RoleId", "1", "3"));
-    options.AddPolicy("RequireStaffOrCustomerRole", policy => policy.RequireClaim("RoleId", "2", "3"));
-    options.AddPolicy("RequireAllRoles", policy => policy.RequireClaim("RoleId", "1", "2", "3"));
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim(ClaimTypes.Role, "1"));
+    options.AddPolicy("RequireStaffRole", policy => policy.RequireClaim(ClaimTypes.Role, "2"));
+    options.AddPolicy("RequireCustomerRole", policy => policy.RequireClaim(ClaimTypes.Role, "3"));
+    options.AddPolicy("RequireAdminOrStaffRole", policy => policy.RequireClaim(ClaimTypes.Role, "1", "2"));
+    options.AddPolicy("RequireAdminOrCustomerRole", policy => policy.RequireClaim(ClaimTypes.Role, "1", "3"));
+    options.AddPolicy("RequireStaffOrCustomerRole", policy => policy.RequireClaim(ClaimTypes.Role, "2", "3"));
+    options.AddPolicy("RequireAllRoles", policy => policy.RequireClaim(ClaimTypes.Role, "1", "2", "3"));
 });
 
 // Auto mapper
@@ -94,20 +95,20 @@ builder.Services.AddMemoryCache();
 builder.Services.AddCors();
 
 // Add Hangfire services.
-builder.Services.AddHangfire(configuration => configuration
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-    .UseSimpleAssemblyNameTypeSerializer()
-    .UseRecommendedSerializerSettings()
-    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
-    {
-        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-        QueuePollInterval = TimeSpan.Zero,
-        UseRecommendedIsolationLevel = true,
-        UsePageLocksOnDequeue = true,
-        DisableGlobalLocks = true
-    }));
-builder.Services.AddHangfireServer();
+//builder.Services.AddHangfire(configuration => configuration
+//    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+//    .UseSimpleAssemblyNameTypeSerializer()
+//    .UseRecommendedSerializerSettings()
+//    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
+//    {
+//        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+//        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+//        QueuePollInterval = TimeSpan.Zero,
+//        UseRecommendedIsolationLevel = true,
+//        UsePageLocksOnDequeue = true,
+//        DisableGlobalLocks = true
+//    }));
+//builder.Services.AddHangfireServer();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -157,22 +158,22 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHangfireDashboard();
+//app.UseHangfireDashboard();
 
 // Schedule the recurring job (Hangfire)
-var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+//var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
 
-recurringJobManager.AddOrUpdate(
-    "RejectExpiredOrder",
-    () => app.Services.CreateScope().ServiceProvider.GetRequiredService<IOrderBackgroundService>().RejectExpiredOrder(),
-    Cron.MinuteInterval(2)
-    );
+//recurringJobManager.AddOrUpdate(
+//    "RejectExpiredOrder",
+//    () => app.Services.CreateScope().ServiceProvider.GetRequiredService<IOrderBackgroundService>().RejectExpiredOrder(),
+//    Cron.MinuteInterval(2)
+//    );
 
-recurringJobManager.AddOrUpdate(
-    "RemoveHiddenProductInCustomerCarts",
-    () => app.Services.CreateScope().ServiceProvider.GetRequiredService<IProductBackgroundService>().RemoveHiddenProductInCustomerCarts(),
-    Cron.MinuteInterval(2)
-    );
+//recurringJobManager.AddOrUpdate(
+//    "RemoveHiddenProductInCustomerCarts",
+//    () => app.Services.CreateScope().ServiceProvider.GetRequiredService<IProductBackgroundService>().RemoveHiddenProductInCustomerCarts(),
+//    Cron.MinuteInterval(2)
+//    );
 
 app.UseCors("AllowAll");
 
