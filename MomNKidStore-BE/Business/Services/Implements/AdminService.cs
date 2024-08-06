@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MomNKidStore_BE.Business.ModelViews.AccountDTOs;
+using MomNKidStore_BE.Business.ModelViews.DashboardDTOs;
+using MomNKidStore_BE.Business.ModelViews.ProductDTOs;
 using MomNKidStore_BE.Business.Services.Interfaces;
 using MomNKidStore_Repository.Entities;
 using MomNKidStore_Repository.UnitOfWorks.Interfaces;
@@ -137,6 +139,64 @@ namespace MomNKidStore_BE.Business.Services.Implements
                     await transaction.RollbackAsync();
                     throw new Exception(ex.Message);
                 }
+            }
+        }
+
+        public async Task<DashboardDTO> GetDashboard()
+        {
+            try
+            {
+                var response = new DashboardDTO();
+                var productSales = new Dictionary<int, int>();
+
+                var orders = await _unitOfWork.OrderRepository.GetAllAsync();
+                if (orders.Any()) {
+                    foreach (var order in orders)
+                    {
+                        if (order.Status == 1 || order.Status == 3 || order.Status == 4)
+                        {
+                            var orderDetails = await _unitOfWork.OrderDetailRepository.GetAsync(od => od.OrderId == order.OrderId);
+                            if (orderDetails.Any())
+                            {
+                                foreach (var orderDetail in orderDetails)
+                                {
+                                    if (!productSales.ContainsKey(orderDetail.ProductId))
+                                    {
+                                        productSales[orderDetail.ProductId] = 0;
+                                    }
+                                    productSales[orderDetail.ProductId] += orderDetail.OrderQuantity;
+                                    response.totalSoldProduct += orderDetail.OrderQuantity;
+                                }
+                            }
+                        }
+                        response.totalRevenue += order.TotalPrice;
+                        response.totalOrder++;
+                    }
+                }
+
+                var topSellingProducts = productSales.OrderByDescending(ps => ps.Value).Take(5).ToDictionary(ps => ps.Key, ps => ps.Value);
+
+                foreach (var product in topSellingProducts)
+                {
+                    var pd = await _unitOfWork.ProductRepository.GetByIDAsync(product.Key);
+                    var productResponse = _mapper.Map<ProductDtoResponse>(pd);
+                    var productImages = (await _unitOfWork.ImageProductRepository.GetAsync(p => p.ProductId == pd.ProductId)).FirstOrDefault();
+                    if (productImages != null)
+                    {
+                        var image = new ImageProductDto
+                        {
+                            ImageProduct1 = productImages.ImageProduct1
+                        };
+                        productResponse.Images.Add(image);
+                    }
+                    response.topSellingProducts.Add(productResponse);
+                }
+
+                return response;
+            } 
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

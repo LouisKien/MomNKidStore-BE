@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using MomNKidStore_BE.Business.ModelViews.AccountDTOs;
 using MomNKidStore_BE.Business.Services.Interfaces;
+using MomNKidStore_Repository.Entities;
 
 namespace MomNKidStore_BE.Controllers
 {
@@ -12,11 +14,13 @@ namespace MomNKidStore_BE.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly IAuthService _authService;
+        private readonly string _imagesDirectory;
 
-        public AdminController(IAdminService adminService, IAuthService authService)
+        public AdminController(IAdminService adminService, IAuthService authService, IWebHostEnvironment env)
         {
             _adminService = adminService;
             _authService = authService;
+            _imagesDirectory = Path.Combine(env.ContentRootPath, "img", "product");
         }
 
         [Authorize(Policy = "RequireAdminRole")]
@@ -93,6 +97,36 @@ namespace MomNKidStore_BE.Controllers
                 {
                     return BadRequest("Account not found");
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> GetDashboard()
+        {
+            try
+            {
+                var response = await _adminService.GetDashboard();
+                foreach (var product in response.topSellingProducts)
+                {
+                    if (product.Images.Any())
+                    {
+                        foreach (var image in product.Images)
+                        {
+                            var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
+                            if (System.IO.File.Exists(imagePath))
+                            {
+                                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                                image.ImageProduct1 = Convert.ToBase64String(imageBytes);
+                            }
+                        }
+                    }
+                }
+                return Ok(response);
             }
             catch (Exception ex)
             {

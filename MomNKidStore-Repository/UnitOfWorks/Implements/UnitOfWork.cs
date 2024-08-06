@@ -27,7 +27,6 @@ namespace MomNKidStore_Repository.UnitOfWorks.Implements
         private GenericRepository<Customer> _customerRepository;
         private GenericRepository<BlogProduct> _blogProductRepository;
         private GenericRepository<VoucherOfShop> _voucherOfShopRepository;
-        private GenericRepository<ChatRequest> _chatRequestRepository;
         public UnitOfWork(MomNkidStoreContext context)
         {
             _context = context;
@@ -58,8 +57,6 @@ namespace MomNKidStore_Repository.UnitOfWorks.Implements
         public IGenericRepository<BlogProduct> BlogProductRepository => _blogProductRepository ??= new GenericRepository<BlogProduct>(_context);
 
         public IGenericRepository<VoucherOfShop> VoucherOfShopRepository => _voucherOfShopRepository ??= new GenericRepository<VoucherOfShop>(_context);
-
-        public IGenericRepository<ChatRequest> ChatRequestRepository => _chatRequestRepository ?? new GenericRepository<ChatRequest>(_context);
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {

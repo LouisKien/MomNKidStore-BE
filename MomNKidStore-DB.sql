@@ -153,7 +153,7 @@ CREATE TABLE [dbo].[Payment] (
 GO
 
 CREATE TABLE [dbo].[Feedback](
-	[feedbackId] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[feedbackId] [int] PRIMARY KEY IDENTITY(201,1) NOT NULL,
 	[customerId] [int] NOT NULL,
 	[productId] [int] NOT NULL,
 	[feedbackContent] [nvarchar](250) NOT NULL,
@@ -161,15 +161,5 @@ CREATE TABLE [dbo].[Feedback](
 	[status] [bit] NOT NULL
 	CONSTRAINT FK_customerId_Feedback FOREIGN KEY ([customerId]) REFERENCES [dbo].[Customer]([customerId]),
 	CONSTRAINT FK_productId_Feedback FOREIGN KEY ([productId]) REFERENCES [dbo].[Product]([productId])
-)
-GO
-
-create table ChatRequest (
-	MessageId INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	[customerId] INT NOT NULL,
-	Type NVARCHAR(256) NOT NULL,
-	Content NVARCHAR(MAX),
-	SendTime DATETIME,
-	Status INT NOT NULL
 )
 GO

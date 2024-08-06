@@ -40,7 +40,5 @@ namespace MomNKidStore_Repository.UnitOfWorks.Interfaces
         IGenericRepository<BlogProduct> BlogProductRepository { get; }
 
         IGenericRepository<VoucherOfShop> VoucherOfShopRepository { get; }
-
-        IGenericRepository<ChatRequest> ChatRequestRepository { get; }
     }
 }
