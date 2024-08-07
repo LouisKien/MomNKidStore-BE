@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MomNKidStore_BE.Business.ModelViews.AccountDTOs;
+using MomNKidStore_BE.Business.ModelViews.BlogDTOs;
 using MomNKidStore_BE.Business.ModelViews.CartDTOs;
 using MomNKidStore_BE.Business.ModelViews.CustomerDTOs;
+using MomNKidStore_BE.Business.ModelViews.FeedbackDTOs;
 using MomNKidStore_BE.Business.ModelViews.OrderDetailDTOs;
 using MomNKidStore_BE.Business.ModelViews.OrderDTOs;
 using MomNKidStore_BE.Business.ModelViews.PaymentDTOs;
@@ -39,6 +41,13 @@ namespace MomNKidStore_BE.Business.MappingProfiles
 
             CreateMap<Customer, CustomerDto>().ReverseMap();
             CreateMap<Customer, UpdateCustomerDto>().ReverseMap();
+
+            CreateMap<Feedback, FeedbackDtoRequest>().ReverseMap();
+            CreateMap<Feedback, FeedbackDtoResponse>().ReverseMap();
+            CreateMap<Feedback, UpdateFeedbackDtoRequest>().ReverseMap();
+
+            CreateMap<Blog, BlogDtoResponse>().ReverseMap();
+            CreateMap<BlogDtoRequest, Blog>();
 
         }
     }

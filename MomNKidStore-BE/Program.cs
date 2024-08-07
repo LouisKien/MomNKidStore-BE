@@ -82,6 +82,8 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IVoucherOfShopService, VoucherOfShopService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
 
 
 // Background service containers
@@ -151,11 +153,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MomNKidStore API V1");
-        c.RoutePrefix = "api";
-    });
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MomNKidStore API V1");
+    //    c.RoutePrefix = "api";
+    //});
+    app.UseSwaggerUI();
 }
 
 app.UseHangfireDashboard();
