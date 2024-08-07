@@ -16,7 +16,7 @@ namespace MomNKidStore_BE.Controllers
             _voucherOfShopService = voucherOfShopService;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -31,7 +31,7 @@ namespace MomNKidStore_BE.Controllers
             }
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("{voucherId}")]
         public async Task<IActionResult> Get(int voucherId)
         {

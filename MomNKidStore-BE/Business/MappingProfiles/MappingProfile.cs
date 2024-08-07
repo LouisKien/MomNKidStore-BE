@@ -18,6 +18,7 @@ namespace MomNKidStore_BE.Business.MappingProfiles
         {
             CreateMap<Account, UserAuthenticatingDtoResponse>().ReverseMap();
             CreateMap<Account, UserRegisterDtoRequest>().ReverseMap();
+            CreateMap<Account, StaffDtoRequest>().ReverseMap();
 
             CreateMap<Cart, CartDtoRequest>().ReverseMap();
             CreateMap<Cart, CartDtoResponse>().ReverseMap();

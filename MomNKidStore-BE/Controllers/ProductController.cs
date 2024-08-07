@@ -65,9 +65,9 @@ namespace MomNKidStore_BE.Controllers
 
         [AllowAnonymous]
         [HttpGet("get-all-products")]
-        public async Task<IActionResult> GetAllProduct([FromQuery] int CategoryId)
+        public async Task<IActionResult> GetAllProduct([FromQuery] int CategoryId, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var products = await _productService.GetAllProducts(CategoryId);
+            var products = await _productService.GetAllProducts(CategoryId, page, pageSize);
             if (products != null)
             {
                 foreach (var product in products)

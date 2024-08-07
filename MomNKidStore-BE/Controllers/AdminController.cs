@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -24,15 +25,26 @@ namespace MomNKidStore_BE.Controllers
         }
 
         [Authorize(Policy = "RequireAdminRole")]
-        [HttpPost("/api/v1/accounts/create-staff")]
-        public async Task<IActionResult> CreateAccountStaff([FromBody] UserRegisterDtoRequest request)
+        [HttpGet("all-account")]
+        public async Task<IActionResult> GetAccountList(int Role)
         {
             try
             {
-                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.UserName))
-                {
-                    return BadRequest("Please fill at least Username, email and password fields");
-                }
+                var response = await _adminService.GetAccountList(Role);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [Authorize(Policy = "RequireAdminRole")]
+        [HttpPost("create-staff")]
+        public async Task<IActionResult> CreateAccountStaff([FromBody] StaffDtoRequest request)
+        {
+            try
+            {
                 if (!request.Password.Equals(request.ConfirmPassword))
                 {
                     return BadRequest("Not matching password");

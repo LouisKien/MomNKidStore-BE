@@ -254,6 +254,26 @@ namespace MomNKidStore_BE.Business.Services.Implements
             }
         }
 
+        public async Task<bool> UpdateOrderStatus(int id, int status)
+        {
+            try
+            {
+                var order = await _unitOfWork.OrderRepository.GetByIDAsync(id);
+                if(order == null)
+                {
+                    return false;
+                }
+                order.Status = status;
+                await _unitOfWork.OrderRepository.UpdateAsync(order);
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<bool> ValidateExchangedPoint(int exchangedPoint, int customerId)
         {
             try

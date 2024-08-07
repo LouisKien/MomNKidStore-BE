@@ -11,5 +11,6 @@ namespace MomNKidStore_BE.Business.Services.Interfaces
         Task<List<OrderDtoResponse>> Get();
         Task<OrderDtoResponse?> Get(int id);
         Task<List<OrderDtoResponse>> GetByCustomerId(int customerId, int status);
+        Task<bool> UpdateOrderStatus(int id, int status);
     }
 }

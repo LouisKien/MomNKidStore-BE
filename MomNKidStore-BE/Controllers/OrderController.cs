@@ -164,5 +164,27 @@ namespace MomNKidStore_BE.Controllers
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
+
+        [Authorize("RequireStaffRole")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateOrderStatus([FromQuery] int orderId, [FromQuery] int status)
+        {
+            try
+            {
+                var response = await _orderService.UpdateOrderStatus(orderId, status);
+                if (response)
+                {
+                    return Ok("Updated order successfully");
+                }
+                else
+                {
+                    return BadRequest("Failed to update order");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
     }
 }

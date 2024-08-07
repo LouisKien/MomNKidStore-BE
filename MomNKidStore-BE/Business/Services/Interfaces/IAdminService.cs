@@ -5,9 +5,10 @@ namespace MomNKidStore_BE.Business.Services.Interfaces
 {
     public interface IAdminService
     {
-        Task<bool> CreateAccountStaff(UserRegisterDtoRequest newAccount);
+        Task<bool> CreateAccountStaff(StaffDtoRequest newAccount);
         Task<bool> LockAccount(int accountId);
         Task<bool> UnlockAccount(int accountId);
         Task<DashboardDTO> GetDashboard();
+        Task<List<AccountDtoResponse>> GetAccountList(int role);
     }
 }

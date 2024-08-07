@@ -21,7 +21,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateAccountStaff(UserRegisterDtoRequest newAccount)
+        public async Task<bool> CreateAccountStaff(StaffDtoRequest newAccount)
         {
             try
             {
@@ -194,6 +194,54 @@ namespace MomNKidStore_BE.Business.Services.Implements
 
                 return response;
             } 
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<AccountDtoResponse>> GetAccountList(int role)
+        {
+            try
+            {
+                var response = new List<AccountDtoResponse>();
+                IEnumerable<Account> accounts;
+
+                if(role == 0)
+                {
+                    accounts = await _unitOfWork.AccountRepository.GetAsync(filter: a => a.RoleId == 2 || a.RoleId == 3);
+                } else
+                {
+                    accounts = await _unitOfWork.AccountRepository.GetAsync(filter: a => a.RoleId == role);
+                }
+
+                foreach (var account in accounts)
+                {
+                    if (account.RoleId == 2)
+                    {
+                        var accountView = new AccountDtoResponse
+                        {
+                            Email = account.Email,
+                            RoleId = account.RoleId,
+                            userName = account.Email
+                        };
+                        response.Add(accountView);
+                    }
+                    else if (account.RoleId == 3)
+                    {
+                        var customer = (await _unitOfWork.CustomerRepository.GetAsync(filter: c => c.AccountId == account.AccountId)).FirstOrDefault();
+                        var accountView = new AccountDtoResponse
+                        {
+                            Email = account.Email,
+                            RoleId = account.RoleId,
+                            userName = customer.UserName
+                        };
+                        response.Add(accountView);
+                    }
+                }
+
+                return response;
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);

@@ -96,18 +96,18 @@ namespace MomNKidStore_BE.Business.Services.Implements
             }
         }
 
-        public async Task<List<ProductDtoResponse>> GetAllProducts(int CategoryId)
+        public async Task<List<ProductDtoResponse>> GetAllProducts(int CategoryId, int page, int pageSize)
         {
             try
             {
                 var products = new List<Product>();
                 if (CategoryId == 0)
                 {
-                    products = (await _unitOfWork.ProductRepository.GetAsync(p => p.ProductStatus == 1)).ToList();
+                    products = (await _unitOfWork.ProductRepository.GetAsync(filter: p => p.ProductStatus == 1, pageIndex: page, pageSize: pageSize)).ToList();
                 }
                 else
                 {
-                    products = (await _unitOfWork.ProductRepository.GetAsync(p => p.ProductStatus == 1 && p.ProductCategoryId == CategoryId)).ToList();
+                    products = (await _unitOfWork.ProductRepository.GetAsync(filter: p => p.ProductStatus == 1 && p.ProductCategoryId == CategoryId, pageIndex: page, pageSize: pageSize)).ToList();
                 }
                 if (products.Any())
                 {
