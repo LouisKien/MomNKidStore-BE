@@ -39,5 +39,7 @@ namespace MomNKidStore_Repository.Repositories.Interfaces
         Task DeleteAsync(TEntity entityToDelete);
 
         Task DeleteRangeAsync(IEnumerable<TEntity> entities);
+
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null);
     }
 }

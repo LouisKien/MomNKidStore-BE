@@ -67,29 +67,36 @@ namespace MomNKidStore_BE.Controllers
         [HttpGet("get-all-products")]
         public async Task<IActionResult> GetAllProduct([FromQuery] int CategoryId, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var products = await _productService.GetAllProducts(CategoryId, page, pageSize);
-            if (products != null)
+            try
             {
-                //foreach (var product in products)
-                //{
-                //    if (product.Images.Any())
-                //    {
-                //        foreach (var image in product.Images)
-                //        {
-                //            var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
-                //            if (System.IO.File.Exists(imagePath))
-                //            {
-                //                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                //                image.ImageProduct1 = Convert.ToBase64String(imageBytes);
-                //            }
-                //        }
-                //    }
-                //}
-                return Ok(products);
+                var products = await _productService.GetAllProducts(CategoryId, page, pageSize);
+                return Ok(new { productList = products.response, totalPage = products.totalPage});
+                if (products.response != null)
+                {
+                    //foreach (var product in products)
+                    //{
+                    //    if (product.Images.Any())
+                    //    {
+                    //        foreach (var image in product.Images)
+                    //        {
+                    //            var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
+                    //            if (System.IO.File.Exists(imagePath))
+                    //            {
+                    //                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    //                image.ImageProduct1 = Convert.ToBase64String(imageBytes);
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                }
+                else
+                {
+                    return NotFound("Products not avaiable");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound("Products not avaiable");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 
@@ -97,26 +104,32 @@ namespace MomNKidStore_BE.Controllers
         [HttpGet("get-product-by-id/{id}")]
         public async Task<IActionResult> GetProductById(int id)
         {
-            var product = await _productService.GetProductByID(id);
-            if (product != null)
-            {
-                //if (product.Images.Any())
-                //{
-                //    foreach (var image in product.Images)
-                //    {
-                //        var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
-                //        if (System.IO.File.Exists(imagePath))
-                //        {
-                //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                //            image.ImageProduct1 = Convert.ToBase64String(imageBytes);
-                //        }
-                //    }
-                //}
-                return Ok(product);
+            try {
+                var product = await _productService.GetProductByID(id);
+                if (product != null)
+                {
+                    //if (product.Images.Any())
+                    //{
+                    //    foreach (var image in product.Images)
+                    //    {
+                    //        var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
+                    //        if (System.IO.File.Exists(imagePath))
+                    //        {
+                    //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    //            image.ImageProduct1 = Convert.ToBase64String(imageBytes);
+                    //        }
+                    //    }
+                    //}
+                    return Ok(product);
+                }
+                else
+                {
+                    return BadRequest("Product not found");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Product not found");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
 

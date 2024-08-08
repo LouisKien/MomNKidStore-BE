@@ -7,7 +7,7 @@ namespace MomNKidStore_BE.Business.Services.Interfaces
     {
         Task<bool> AddNewProduct(Product product, List<string> imagePaths);
 
-        Task<List<ProductDtoResponse>> GetAllProducts(int CategoryId, int page, int pageSize);
+        Task<(List<ProductDtoResponse> response, int totalPage)> GetAllProducts(int CategoryId, int page, int pageSize);
 
         Task<ProductDtoResponse> GetProductByID(int id);
 

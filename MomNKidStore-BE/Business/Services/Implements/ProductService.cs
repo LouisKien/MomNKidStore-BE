@@ -96,10 +96,13 @@ namespace MomNKidStore_BE.Business.Services.Implements
             }
         }
 
-        public async Task<List<ProductDtoResponse>> GetAllProducts(int CategoryId, int page, int pageSize)
+        public async Task<(List<ProductDtoResponse> response, int totalPage)> GetAllProducts(int CategoryId, int page, int pageSize)
         {
             try
             {
+                List<ProductDtoResponse> list = new List<ProductDtoResponse>();
+                var totalProduct = await _unitOfWork.ProductRepository.CountAsync();
+                var totalPage = (totalProduct / pageSize) + 1;
                 var products = new List<Product>();
                 if (CategoryId == 0)
                 {
@@ -111,7 +114,6 @@ namespace MomNKidStore_BE.Business.Services.Implements
                 }
                 if (products.Any())
                 {
-                    List<ProductDtoResponse> list = new List<ProductDtoResponse>();
                     foreach (var product in products)
                     {
                         var productView = _mapper.Map<ProductDtoResponse>(product);
@@ -126,12 +128,8 @@ namespace MomNKidStore_BE.Business.Services.Implements
                         }
                         list.Add(productView);
                     }
-                    return list;
                 }
-                else
-                {
-                    return null;
-                }
+                return (list, totalPage);
             }
             catch (Exception ex)
             {
