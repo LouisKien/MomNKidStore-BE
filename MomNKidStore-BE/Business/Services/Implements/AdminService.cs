@@ -221,6 +221,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
                     {
                         var accountView = new AccountDtoResponse
                         {
+                            AccountId = account.AccountId,
                             Email = account.Email,
                             RoleId = account.RoleId,
                             userName = account.Email
@@ -232,6 +233,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
                         var customer = (await _unitOfWork.CustomerRepository.GetAsync(filter: c => c.AccountId == account.AccountId)).FirstOrDefault();
                         var accountView = new AccountDtoResponse
                         {
+                            AccountId = account.AccountId,
                             Email = account.Email,
                             RoleId = account.RoleId,
                             userName = customer.UserName
