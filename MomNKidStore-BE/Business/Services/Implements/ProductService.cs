@@ -209,23 +209,25 @@ namespace MomNKidStore_BE.Business.Services.Implements
         }
 
 
-        public async Task<(bool check, List<string>? oldImagePaths)> UpdateProduct(ProductDtoRequest request, List<string> imagePaths, int id)
+        public async Task<bool> UpdateProduct(ProductDtoRequest request, List<string> imagePaths, int id)
         {
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
                     bool status = false;
-                    var checkCategory = _unitOfWork.ProductCategoryRepository.GetByIDAsync(request.ProductCategoryId);
+                    var checkCategory = await _unitOfWork.ProductCategoryRepository.GetByIDAsync(request.ProductCategoryId);
                     if (checkCategory != null)
                     {
                         var checkProduct = await _unitOfWork.ProductRepository.GetByIDAsync(id);
                         if (checkProduct != null)
                         {
                             var product = _mapper.Map(request, checkProduct);
+                            product.ProductStatus = 1;
                             await _unitOfWork.ProductRepository.UpdateAsync(product);
+                            //await Task.Delay(200);
                             await _unitOfWork.SaveAsync();
-                            var currentImagePaths = new List<string>();
+                            //var currentImagePaths = new List<string>();
 
                             var currentImages = await _unitOfWork.ImageProductRepository.GetAsync(p => p.ProductId == checkProduct.ProductId);
                             if (currentImages.Any())
@@ -234,7 +236,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
                                 {
                                     await _unitOfWork.ImageProductRepository.DeleteAsync(image);
                                     await _unitOfWork.SaveAsync();
-                                    currentImagePaths.Add(image.ImageProduct1);
+                                    //currentImagePaths.Add(image.ImageProduct1);
                                 }
                             }
 
@@ -250,6 +252,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
                                             ImageProduct1 = imagePath
                                         };
                                         await _unitOfWork.ImageProductRepository.AddAsync(image);
+                                        // await Task.Delay(200);
                                         await _unitOfWork.SaveAsync();
                                     }
                                 }
@@ -257,16 +260,16 @@ namespace MomNKidStore_BE.Business.Services.Implements
 
                             status = true;
                             await transaction.CommitAsync();
-                            return (status, currentImagePaths);
+                            return status;
                         }
                         else
                         {
-                            return (status, null);
+                            return status;
                         }
                     }
                     else
                     {
-                        return (status, null);
+                        return status;
                     }
 
                 }

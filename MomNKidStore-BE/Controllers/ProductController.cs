@@ -38,11 +38,11 @@ namespace MomNKidStore_BE.Controllers
                     {
                         if (!String.IsNullOrEmpty(image.ImageProduct1))
                         {
-                            byte[] imageBytes = Convert.FromBase64String(image.ImageProduct1);
-                            string filename = $"ProductImage_{Guid.NewGuid()}.png";
-                            string imagePath = Path.Combine(_imagesDirectory, filename);
-                            System.IO.File.WriteAllBytes(imagePath, imageBytes);
-                            imagePaths.Add(filename);
+                            //byte[] imageBytes = Convert.FromBase64String(image.ImageProduct1);
+                            //string filename = $"ProductImage_{Guid.NewGuid()}.png";
+                            //string imagePath = Path.Combine(_imagesDirectory, filename);
+                            //System.IO.File.WriteAllBytes(imagePath, imageBytes);
+                            imagePaths.Add(image.ImageProduct1);
                         }
                     }
                 }
@@ -70,21 +70,21 @@ namespace MomNKidStore_BE.Controllers
             var products = await _productService.GetAllProducts(CategoryId, page, pageSize);
             if (products != null)
             {
-                foreach (var product in products)
-                {
-                    if (product.Images.Any())
-                    {
-                        foreach (var image in product.Images)
-                        {
-                            var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
-                            if (System.IO.File.Exists(imagePath))
-                            {
-                                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                                image.ImageProduct1 = Convert.ToBase64String(imageBytes);
-                            }
-                        }
-                    }
-                }
+                //foreach (var product in products)
+                //{
+                //    if (product.Images.Any())
+                //    {
+                //        foreach (var image in product.Images)
+                //        {
+                //            var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
+                //            if (System.IO.File.Exists(imagePath))
+                //            {
+                //                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                //                image.ImageProduct1 = Convert.ToBase64String(imageBytes);
+                //            }
+                //        }
+                //    }
+                //}
                 return Ok(products);
             }
             else
@@ -100,18 +100,18 @@ namespace MomNKidStore_BE.Controllers
             var product = await _productService.GetProductByID(id);
             if (product != null)
             {
-                if (product.Images.Any())
-                {
-                    foreach (var image in product.Images)
-                    {
-                        var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
-                        if (System.IO.File.Exists(imagePath))
-                        {
-                            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                            image.ImageProduct1 = Convert.ToBase64String(imageBytes);
-                        }
-                    }
-                }
+                //if (product.Images.Any())
+                //{
+                //    foreach (var image in product.Images)
+                //    {
+                //        var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
+                //        if (System.IO.File.Exists(imagePath))
+                //        {
+                //            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                //            image.ImageProduct1 = Convert.ToBase64String(imageBytes);
+                //        }
+                //    }
+                //}
                 return Ok(product);
             }
             else
@@ -129,21 +129,21 @@ namespace MomNKidStore_BE.Controllers
                 var products = await _productService.Search(searchInput);
                 if (products != null)
                 {
-                    foreach (var product in products)
-                    {
-                        if (product.Images.Any())
-                        {
-                            foreach (var image in product.Images)
-                            {
-                                var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
-                                if (System.IO.File.Exists(imagePath))
-                                {
-                                    byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                                    image.ImageProduct1 = Convert.ToBase64String(imageBytes);
-                                }
-                            }
-                        }
-                    }
+                    //foreach (var product in products)
+                    //{
+                    //    if (product.Images.Any())
+                    //    {
+                    //        foreach (var image in product.Images)
+                    //        {
+                    //            var imagePath = Path.Combine(_imagesDirectory, image.ImageProduct1);
+                    //            if (System.IO.File.Exists(imagePath))
+                    //            {
+                    //                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                    //                image.ImageProduct1 = Convert.ToBase64String(imageBytes);
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     return Ok(products);
                 }
                 else
@@ -168,30 +168,30 @@ namespace MomNKidStore_BE.Controllers
                 {
                     if (!String.IsNullOrEmpty(image.ImageProduct1))
                     {
-                        byte[] imageBytes = Convert.FromBase64String(image.ImageProduct1);
-                        string filename = $"ProductImage_{Guid.NewGuid()}.png";
-                        string imagePath = Path.Combine(_imagesDirectory, filename);
-                        System.IO.File.WriteAllBytes(imagePath, imageBytes);
-                        imagePaths.Add(filename);
+                        //byte[] imageBytes = Convert.FromBase64String(image.ImageProduct1);
+                        //string filename = $"ProductImage_{Guid.NewGuid()}.png";
+                        //string imagePath = Path.Combine(_imagesDirectory, filename);
+                        //System.IO.File.WriteAllBytes(imagePath, imageBytes);
+                        imagePaths.Add(image.ImageProduct1);
                     }
                 }
             }
             var checkSuccess = await _productService.UpdateProduct(productView, imagePaths, id);
-            if (checkSuccess.check && checkSuccess.oldImagePaths != null)
-            {
-                if (checkSuccess.oldImagePaths.Any())
-                {
-                    foreach (var oldImagePath in checkSuccess.oldImagePaths)
-                    {
-                        var fullImagePath = Path.Combine(_imagesDirectory, oldImagePath);
-                        if (System.IO.File.Exists(fullImagePath))
-                        {
-                            System.IO.File.Delete(fullImagePath);
-                        }
-                    }
-                }
-            }
-            if (checkSuccess.check)
+            //if (checkSuccess.check && checkSuccess.oldImagePaths != null)
+            //{
+            //    if (checkSuccess.oldImagePaths.Any())
+            //    {
+            //        foreach (var oldImagePath in checkSuccess.oldImagePaths)
+            //        {
+            //            var fullImagePath = Path.Combine(_imagesDirectory, oldImagePath);
+            //            if (System.IO.File.Exists(fullImagePath))
+            //            {
+            //                System.IO.File.Delete(fullImagePath);
+            //            }
+            //        }
+            //    }
+            //}
+            if (checkSuccess)
             {
                 return Ok("Update successful");
             }

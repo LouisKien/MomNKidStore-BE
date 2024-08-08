@@ -11,7 +11,7 @@ namespace MomNKidStore_BE.Business.Services.Interfaces
 
         Task<ProductDtoResponse> GetProductByID(int id);
 
-        Task<(bool check, List<string>? oldImagePaths)> UpdateProduct(ProductDtoRequest request, List<string> imagePaths, int id);
+        Task<bool> UpdateProduct(ProductDtoRequest request, List<string> imagePaths, int id);
 
         Task<List<ProductDtoResponse>> Search(string searchInput);
 

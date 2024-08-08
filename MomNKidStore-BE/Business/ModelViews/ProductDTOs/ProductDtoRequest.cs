@@ -16,9 +16,9 @@ namespace MomNKidStore_BE.Business.ModelViews.ProductDTOs
         public decimal ProductPrice { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue)]
+        [Range(1, int.MaxValue)]
         public int ProductQuantity { get; set; }
-        public bool ProductStatus { get; set; }
+        //public bool ProductStatus { get; set; }
 
         public List<ImageProductDto> Images { get; set; } = new List<ImageProductDto>();
     }

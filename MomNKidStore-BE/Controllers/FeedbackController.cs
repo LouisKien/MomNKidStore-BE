@@ -7,7 +7,7 @@ using MomNKidStore_BE.Business.Services.Interfaces;
 
 namespace MomNKidStore_BE.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class FeedbackController : ControllerBase
     {
