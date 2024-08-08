@@ -25,7 +25,7 @@ namespace MomNKidStore_BE.Controllers
             _mapper = mapper;
         }
 
-        //[Authorize(Policy = "RequireStaffRole")]
+        [Authorize(Policy = "RequireStaffRole")]
         [HttpPost("add-product")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductDtoRequest productView)
         {
@@ -65,7 +65,7 @@ namespace MomNKidStore_BE.Controllers
 
         [AllowAnonymous]
         [HttpGet("get-all-products")]
-        public async Task<IActionResult> GetAllProduct([FromQuery] int CategoryId, [FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<IActionResult> GetAllProduct([FromQuery] int CategoryId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {
@@ -93,6 +93,21 @@ namespace MomNKidStore_BE.Controllers
                 {
                     return NotFound("Products not avaiable");
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [Authorize(Policy = "RequireStaffRole")]
+        [HttpGet("get-all-products-with-status")]
+        public async Task<IActionResult> GetAllProductWithStatus([FromQuery] int ProductStatus, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var products = await _productService.GetAllProductsWithStatus(ProductStatus, page, pageSize);
+                return Ok(new { productList = products.response, totalPage = products.totalPage });
             }
             catch (Exception ex)
             {
@@ -170,7 +185,7 @@ namespace MomNKidStore_BE.Controllers
             }
         }
 
-        //[Authorize(Policy = "RequireStaffRole")]
+        [Authorize(Policy = "RequireStaffRole")]
         [HttpPut("update-product/{id}")]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductDtoRequest productView, int id)
         {
@@ -214,7 +229,7 @@ namespace MomNKidStore_BE.Controllers
             }
         }
 
-        //[Authorize(Policy = "RequireStaffRole")]
+        [Authorize(Policy = "RequireStaffRole")]
         [HttpPut("update-status")]
         public async Task<IActionResult> UpdateStatus([FromQuery] int id, [FromQuery] int status)
         {
@@ -236,6 +251,8 @@ namespace MomNKidStore_BE.Controllers
             }
         }
 
+
+        [Authorize(Policy = "RequireStaffRole")]
         [HttpDelete("delete-product/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

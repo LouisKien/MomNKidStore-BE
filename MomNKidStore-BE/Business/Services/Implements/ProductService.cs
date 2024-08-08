@@ -101,16 +101,38 @@ namespace MomNKidStore_BE.Business.Services.Implements
             try
             {
                 List<ProductDtoResponse> list = new List<ProductDtoResponse>();
-                var totalProduct = await _unitOfWork.ProductRepository.CountAsync();
-                var totalPage = (totalProduct / pageSize) + 1;
+                var totalPage = 1;
                 var products = new List<Product>();
                 if (CategoryId == 0)
                 {
                     products = (await _unitOfWork.ProductRepository.GetAsync(filter: p => p.ProductStatus == 1, pageIndex: page, pageSize: pageSize)).ToList();
+                    var totalProduct = (await _unitOfWork.ProductRepository.CountAsync(filter: p => p.ProductStatus == 1));
+                    if (totalProduct > pageSize)
+                    {
+                        if(pageSize == 1)
+                        {
+                            totalPage = (totalProduct / pageSize);
+                        } else if ( pageSize > 1)
+                        {
+                            totalPage = (totalProduct / pageSize) + 1;
+                        }
+                    }
                 }
                 else
                 {
                     products = (await _unitOfWork.ProductRepository.GetAsync(filter: p => p.ProductStatus == 1 && p.ProductCategoryId == CategoryId, pageIndex: page, pageSize: pageSize)).ToList();
+                    var totalProduct = (await _unitOfWork.ProductRepository.CountAsync(filter: p => p.ProductStatus == 1 && p.ProductCategoryId == CategoryId));
+                    if (totalProduct > pageSize)
+                    {
+                        if (pageSize == 1)
+                        {
+                            totalPage = (totalProduct / pageSize);
+                        }
+                        else if (pageSize > 1)
+                        {
+                            totalPage = (totalProduct / pageSize) + 1;
+                        }
+                    }
                 }
                 if (products.Any())
                 {
@@ -295,6 +317,51 @@ namespace MomNKidStore_BE.Business.Services.Implements
                 {
                     return false;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<(List<ProductDtoResponse> response, int totalPage)> GetAllProductsWithStatus(int ProductStatus, int page, int pageSize)
+        {
+            try
+            {
+                List<ProductDtoResponse> list = new List<ProductDtoResponse>();
+                var totalPage = 1;
+                var products = new List<Product>();
+                products = (await _unitOfWork.ProductRepository.GetAsync(filter: p => p.ProductStatus == ProductStatus, pageIndex: page, pageSize: pageSize)).ToList();
+                var totalProduct = (await _unitOfWork.ProductRepository.CountAsync(filter: p => p.ProductStatus == ProductStatus));
+                if (totalProduct > pageSize)
+                {
+                    if (pageSize == 1)
+                    {
+                        totalPage = (totalProduct / pageSize);
+                    }
+                    else if (pageSize > 1)
+                    {
+                        totalPage = (totalProduct / pageSize) + 1;
+                    }
+                }
+                if (products.Any())
+                {
+                    foreach (var product in products)
+                    {
+                        var productView = _mapper.Map<ProductDtoResponse>(product);
+                        var productImages = (await _unitOfWork.ImageProductRepository.GetAsync(p => p.ProductId == product.ProductId)).FirstOrDefault();
+                        if (productImages != null)
+                        {
+                            var image = new ImageProductDto
+                            {
+                                ImageProduct1 = productImages.ImageProduct1
+                            };
+                            productView.Images.Add(image);
+                        }
+                        list.Add(productView);
+                    }
+                }
+                return (list, totalPage);
             }
             catch (Exception ex)
             {

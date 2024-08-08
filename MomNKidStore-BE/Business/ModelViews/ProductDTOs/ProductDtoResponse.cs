@@ -10,7 +10,7 @@ namespace MomNKidStore_BE.Business.ModelViews.ProductDTOs
         public string ProductInfor { get; set; } = null!;
         public double ProductPrice { get; set; }
         public int ProductQuantity { get; set; }
-        public bool ProductStatus { get; set; }
+        public int ProductStatus { get; set; }
         public List<ImageProductDto> Images { get; set; } = new List<ImageProductDto>();
         public CategoryDtoResponse? category { get; set; }
     }

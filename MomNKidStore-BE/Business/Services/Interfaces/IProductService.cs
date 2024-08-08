@@ -1,5 +1,6 @@
 ﻿using MomNKidStore_BE.Business.ModelViews.ProductDTOs;
 using MomNKidStore_Repository.Entities;
+using System.Threading.Tasks;
 
 namespace MomNKidStore_BE.Business.Services.Interfaces
 {
@@ -8,6 +9,8 @@ namespace MomNKidStore_BE.Business.Services.Interfaces
         Task<bool> AddNewProduct(Product product, List<string> imagePaths);
 
         Task<(List<ProductDtoResponse> response, int totalPage)> GetAllProducts(int CategoryId, int page, int pageSize);
+
+        Task<(List<ProductDtoResponse> response, int totalPage)> GetAllProductsWithStatus(int ProductStatus, int page, int pageSize);
 
         Task<ProductDtoResponse> GetProductByID(int id);
 
