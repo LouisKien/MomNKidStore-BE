@@ -105,8 +105,8 @@ namespace MomNKidStore_BE.Controllers
         }
 
         [Authorize("RequireCustomerRole")]
-        [HttpPost("createOrder")]
-        public async Task<IActionResult> CreateOrder(List<OrderProductDto> cartItems, int? voucherId, int exchangedPoint)
+        [HttpPost("create-order-in-cart")]
+        public async Task<IActionResult> CreateOrderInCart(List<OrderProductInCartDto> cartItems, int? voucherId, int exchangedPoint)
         {
             try
             {
@@ -155,9 +155,54 @@ namespace MomNKidStore_BE.Controllers
                             return BadRequest("Not enough point to exchange");
                         }
                     }
-                    var url = await _orderService.CreateOrder(cartItems, voucherId, exchangedPoint);
+                    var url = await _orderService.CreateOrderInCart(cartItems, voucherId, exchangedPoint);
                     return Ok(new { url = url });
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [Authorize("RequireCustomerRole")]
+        [HttpPost("create-order")]
+        public async Task<IActionResult> CreateOrderInProductPage(OrderProductDto productDto, int? voucherId, int exchangedPoint)
+        {
+            try
+            {
+                var accountId = User.FindFirst("AccountId")?.Value;
+                if (accountId == null)
+                {
+                    return Forbid();
+                }
+                var checkMatchedId = await _authorizeService.CheckAuthorizeByCustomerId(productDto.customerId, int.Parse(accountId));
+                if (!checkMatchedId.isMatchedCustomer)
+                {
+                    return Forbid();
+                }
+                if (productDto == null)
+                {
+                    return BadRequest("No item to order");
+                }
+                if (voucherId != null)
+                {
+                    var checkVoucher = await _orderService.CheckVoucher((int)voucherId);
+                    if (!checkVoucher)
+                    {
+                        return BadRequest("Cannot use this voucher");
+                    }
+                }
+                if (exchangedPoint > 0)
+                {
+                    var checkPoint = await _orderService.ValidateExchangedPoint(exchangedPoint, productDto.customerId);
+                    if (!checkPoint)
+                    {
+                        return BadRequest("Not enough point to exchange");
+                    }
+                }
+                var url = await _orderService.CreateOrder(productDto, voucherId, exchangedPoint);
+                return Ok(new { url = url });
             }
             catch (Exception ex)
             {

@@ -46,7 +46,117 @@ namespace MomNKidStore_BE.Business.Services.Implements
             }
         }
 
-        public async Task<string> CreateOrder(List<OrderProductDto> cartItems, int? voucherId, int exchangedPoint)
+        public async Task<string> CreateOrder(OrderProductDto productDto, int? voucherId, int exchangedPoint)
+        {
+            using (var transaction = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+                    var product = await _unitOfWork.ProductRepository.GetByIDAsync(productDto.productId);
+                    decimal totalPrice = product.ProductPrice * productDto.quantity;
+
+                    // minus voucher quantity and discount if exist
+                    if (voucherId != null)
+                    {
+                        var voucher = await _unitOfWork.VoucherOfShopRepository.GetByIDAsync(voucherId);
+                        voucher.VoucherQuantity--;
+                        await _unitOfWork.VoucherOfShopRepository.UpdateAsync(voucher);
+                        await _unitOfWork.SaveAsync();
+
+                        totalPrice -= (totalPrice * (decimal)voucher.VoucherValue / 100);
+                    }
+
+                    // minus point and discount if exchangedPoint > 0
+                    if (exchangedPoint > 0)
+                    {
+                        if ((totalPrice / 2) < exchangedPoint)
+                        {
+                            exchangedPoint = (int)totalPrice / 2;
+                        }
+                        var customer = await _unitOfWork.CustomerRepository.GetByIDAsync(productDto.customerId);
+                        customer.Point = customer.Point - exchangedPoint;
+                        await _unitOfWork.CustomerRepository.UpdateAsync(customer);
+                        await _unitOfWork.SaveAsync();
+
+                        totalPrice -= exchangedPoint;
+                    }
+
+                    if(product.ProductQuantity >= productDto.quantity)
+                    {
+                        // create order
+                        var order = new Order
+                        {
+                            CustomerId = productDto.customerId,
+                            TotalPrice = totalPrice,
+                            ExchangedPoint = exchangedPoint,
+                            VoucherId = (voucherId == null ? null : voucherId),
+                            Status = 0,
+                            OrderDate = DateTime.Now,
+                        };
+                        await _unitOfWork.OrderRepository.AddAsync(order);
+                        await _unitOfWork.SaveAsync();
+
+                        // create order detail
+                        var orderDetail = new OrderDetail
+                        {
+                            OrderId = order.OrderId,
+                            ProductId = product.ProductId,
+                            ProductPrice = (double)product.ProductPrice,
+                            OrderQuantity = productDto.quantity,
+                            Status = true
+                        };
+                        await _unitOfWork.OrderDetailRepository.AddAsync(orderDetail);
+                        await _unitOfWork.SaveAsync();
+
+                        // minus quantity of product
+                        product.ProductQuantity = product.ProductQuantity - productDto.quantity;
+                        await _unitOfWork.ProductRepository.UpdateAsync(product);
+                        await _unitOfWork.SaveAsync();
+
+                        var paymentUrl = CreateVnpayLink(order);
+                        await transaction.CommitAsync();
+                        return paymentUrl;
+                    } else
+                    {
+                        // create order
+                        var order = new Order
+                        {
+                            CustomerId = productDto.customerId,
+                            TotalPrice = totalPrice,
+                            ExchangedPoint = exchangedPoint,
+                            VoucherId = (voucherId == null ? null : voucherId),
+                            Status = 10,
+                            OrderDate = DateTime.Now,
+                        };
+                        await _unitOfWork.OrderRepository.AddAsync(order);
+                        await _unitOfWork.SaveAsync();
+
+                        // create order detail
+                        var orderDetail = new OrderDetail
+                        {
+                            OrderId = order.OrderId,
+                            ProductId = product.ProductId,
+                            ProductPrice = (double)product.ProductPrice,
+                            OrderQuantity = productDto.quantity,
+                            Status = true
+                        };
+                        await _unitOfWork.OrderDetailRepository.AddAsync(orderDetail);
+                        await _unitOfWork.SaveAsync();
+
+                        var paymentUrl = CreateVnpayLink(order);
+                        await transaction.CommitAsync();
+                        return paymentUrl;
+                    }   
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception(ex.Message);
+                }
+            }
+        }
+
+        public async Task<string> CreateOrderInCart(List<OrderProductInCartDto> cartItems, int? voucherId, int exchangedPoint)
         {
             using (var transaction = await _unitOfWork.BeginTransactionAsync())
             {
@@ -298,7 +408,7 @@ namespace MomNKidStore_BE.Business.Services.Implements
             }
         }
 
-        public async Task<int> ValidateItemInCart(List<OrderProductDto> cartItems)
+        public async Task<int> ValidateItemInCart(List<OrderProductInCartDto> cartItems)
         {
             try
             {

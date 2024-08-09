@@ -48,17 +48,23 @@ namespace MomNKidStore_BE.Business.Services.Implements
                         await _unitOfWork.PaymentRepository.AddAsync(payment);
 
                         // Update Order's status is Cancelled
-                        existedOrder.Status = 2;
-                        await _unitOfWork.OrderRepository.UpdateAsync(existedOrder);
-
-                        // return back quantity to product
-                        var orderDetails = await _unitOfWork.OrderDetailRepository.GetAllAsync(o => o.OrderId == existedOrder.OrderId);
-                        foreach (var od in orderDetails)
+                        if (existedOrder.Status == 0)
                         {
-                            var product = await _unitOfWork.ProductRepository.GetByIDAsync(od.ProductId);
-                            product.ProductQuantity += od.OrderQuantity;
-                            await _unitOfWork.ProductRepository.UpdateAsync(product);
+                            existedOrder.Status = 2;
+
+                            // return back quantity to product
+                            var orderDetails = await _unitOfWork.OrderDetailRepository.GetAllAsync(o => o.OrderId == existedOrder.OrderId);
+                            foreach (var od in orderDetails)
+                            {
+                                var product = await _unitOfWork.ProductRepository.GetByIDAsync(od.ProductId);
+                                product.ProductQuantity += od.OrderQuantity;
+                                await _unitOfWork.ProductRepository.UpdateAsync(product);
+                            }
                         }
+                        else if (existedOrder.Status == 10) {
+                            existedOrder.Status = 12;
+                        }
+                        await _unitOfWork.OrderRepository.UpdateAsync(existedOrder);
 
                         // return points customer point if used
                         if (existedOrder.ExchangedPoint > 0)
@@ -123,7 +129,14 @@ namespace MomNKidStore_BE.Business.Services.Implements
                         await _unitOfWork.PaymentRepository.AddAsync(payment);
 
                         // Update Order's status is Paid
-                        existedOrder.Status = 1;
+                        if (existedOrder.Status == 0)
+                        {
+                            existedOrder.Status = 1;
+                        }
+                        else if (existedOrder.Status == 10)
+                        {
+                            existedOrder.Status = 11;
+                        }
                         await _unitOfWork.OrderRepository.UpdateAsync(existedOrder);
 
                         // accumulate points customer point

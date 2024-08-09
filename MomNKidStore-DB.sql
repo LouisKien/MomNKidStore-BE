@@ -40,16 +40,18 @@ CREATE TABLE [dbo].[Product](
 GO
 
 -- Create trigger to update status based on quantity
-CREATE TRIGGER trg_UpdateProductStatus
-ON [dbo].[Product]
-AFTER UPDATE
-AS
-BEGIN
-    UPDATE [dbo].[Product]
-    SET [productStatus] = 0
-    WHERE [productQuantity] = 0 AND [productId] IN (SELECT [productId] FROM inserted);
-END;
-GO
+--CREATE TRIGGER trg_UpdateProductStatus
+--ON [dbo].[Product]
+--AFTER UPDATE
+--AS
+--BEGIN
+--    UPDATE [dbo].[Product]
+--    SET [productStatus] = 0
+--    WHERE [productQuantity] = 0 AND [productId] IN (SELECT [productId] FROM inserted);
+--END;
+--GO
+
+-- DROP TRIGGER trg_UpdateProductStatus
 
 CREATE TABLE [dbo].[ImageProduct](
 	[imageId] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,

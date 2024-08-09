@@ -4,8 +4,9 @@ namespace MomNKidStore_BE.Business.Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<int> ValidateItemInCart(List<OrderProductDto> cartItems);
-        Task<string> CreateOrder(List<OrderProductDto> cartItems, int? voucherId, int exchangedPoint);
+        Task<int> ValidateItemInCart(List<OrderProductInCartDto> cartItems);
+        Task<string> CreateOrderInCart(List<OrderProductInCartDto> cartItems, int? voucherId, int exchangedPoint);
+        Task<string> CreateOrder(OrderProductDto productDto, int? voucherId, int exchangedPoint);
         Task<bool> CheckVoucher(int voucherId);
         Task<bool> ValidateExchangedPoint(int exchangedPoint, int customerId);
         Task<List<OrderDtoResponse>> Get();
